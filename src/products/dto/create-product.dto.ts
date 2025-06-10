@@ -10,9 +10,10 @@ export class CreateProductDto {
   @IsString()
   description: string;
 
-  @IsNotEmpty()
-  @IsString()
-  imageUrl: string;
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images: string[];
 
   @IsNotEmpty()
   @IsNumber()

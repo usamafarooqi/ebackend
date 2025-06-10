@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { ProductOption } from './entities/product-option.entity';
+import { ProductImage } from './entities/product-image.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
@@ -12,15 +13,24 @@ export class ProductsService {
     private productsRepository: Repository<Product>,
     @InjectRepository(ProductOption)
     private productOptionsRepository: Repository<ProductOption>,
+    @InjectRepository(ProductImage)
+    private productImagesRepository: Repository<ProductImage>,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
     try {
+      const { images, ...productData } = createProductDto;
       const product = this.productsRepository.create({
-        ...createProductDto,
+        ...productData,
         options: createProductDto.options
       });
-      return await this.productsRepository.save(product);
+      const savedProduct = await this.productsRepository.save(product);
+      // Save images if provided
+      if (images && images.length > 0) {
+        const imageEntities = images.map(url => this.productImagesRepository.create({ url, product: savedProduct }));
+        await this.productImagesRepository.save(imageEntities);
+      }
+      return this.findOne(savedProduct.id);
     } catch (error) {
       console.error(error);
       throw new Error('Failed to create product');
@@ -29,14 +39,14 @@ export class ProductsService {
 
   findAll() {
     return this.productsRepository.find({
-      relations: ['options'],
+      relations: ['options', 'images'],
     });
   }
 
   findOne(id: string) {
     return this.productsRepository.findOne({
       where: { id },
-      relations: ['options'],
+      relations: ['options', 'images'],
     });
   }
 
