@@ -15,7 +15,7 @@ export class OrdersService {
     private productsService: ProductsService,
   ) {}
 
-  async create(createOrderDto: any, userId: string) {
+  async create(createOrderDto: any, userId: number) {
     const { items, ...orderData } = createOrderDto;
     
     // Calculate total amount
@@ -80,7 +80,7 @@ export class OrdersService {
     return result
   }
 
-  findAll(userId?: string) {
+  findAll(userId?: number) {
     const options: any = {
       relations: ['items', 'user'],
     };
@@ -92,24 +92,24 @@ export class OrdersService {
     return this.ordersRepository.find(options);
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.ordersRepository.findOne({
       where: { id },
       relations: ['items', 'user'],
     });
   }
 
-  async update(id: string, updateOrderDto: any) {
+  async update(id: number, updateOrderDto: any) {
     await this.ordersRepository.update(id, updateOrderDto);
     return this.findOne(id);
   }
 
-  async updateStatus(id: string, status: OrderStatus) {
+  async updateStatus(id: number, status: OrderStatus) {
     await this.ordersRepository.update(id, { status });
     return this.findOne(id);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.ordersRepository.delete(id);
   }
 }

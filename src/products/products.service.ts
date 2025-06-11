@@ -43,14 +43,14 @@ export class ProductsService {
     });
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.productsRepository.findOne({
       where: { id },
       relations: ['options', 'images'],
     });
   }
 
-  async update(id: string, updateProductDto: any) {
+  async update(id: number, updateProductDto: any) {
     const { options, ...productData } = updateProductDto;
     
     // Update product
@@ -77,7 +77,7 @@ export class ProductsService {
     return this.findOne(id);
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     const product = await this.findOne(id);
     if (product.options.length > 0) {
       await this.productOptionsRepository.remove(product.options);

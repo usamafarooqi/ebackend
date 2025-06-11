@@ -3,8 +3,8 @@ import { Product } from './product.entity';
 
 @Entity()
 export class ProductOption {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   name: string; // e.g., "Size" or "Spice Level"

@@ -56,7 +56,7 @@ export class AuthService {
     };
   }
 
-  async validateUser(userId: string) {
+  async validateUser(userId: number) {
     const user = await this.usersService.findOne(userId);
     if (!user) {
       throw new UnauthorizedException('Invalid token');

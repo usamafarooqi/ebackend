@@ -3,11 +3,11 @@ import { Order } from './order.entity';
 
 @Entity()
 export class OrderItem {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
-  productId: string;
+  productId: number;
 
   @Column()
   productName: string;
